@@ -2,7 +2,7 @@
 
 extern int gameboard[N][N];
 
-int isGameEnd(int pass_cnt,  int player_cnt, int flip_cnt) 
+int isGameEnd(int pass_cnt,  int player_cnt, int flip_cnt, int game_cnt) 
   {//게임종료조건
    //  isBoardPlay == 1이면  종료  
   //1 . 칸이 모두 찬다.  
@@ -11,37 +11,24 @@ int isGameEnd(int pass_cnt,  int player_cnt, int flip_cnt)
   int i,j;
   int x;
  
-
-  for(i=0; i<6; i++)
-  {
-  	for(j=0;j<6;j++)
-  	{
-  		if ( gameboard[i][j] != 0 )
-  		{
-			x = 1;
-  			continue; }
-  	
-  		else
-	  	{
-			x = 0;
-	  		break; }
-  	}
-  }
   
- 	if(	player_cnt == 36)
+ 	if(	(player_cnt == 36) || (game_cnt >= 36))
   		{
 			x = 1; 
   			//break; 
 		}
-  			
-  	else if ( pass_cnt == 2 || flip_cnt == 0 )
+  	
+	
+  	else if ( (pass_cnt == 2 )||( flip_cnt == 0 ))
   		{
 			x = 1;
 			//break; 
 		}
-				
-
-
+	else
+		{
+			x = 0;
+		}
+			
   return x;
   }  
 

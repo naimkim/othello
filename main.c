@@ -14,8 +14,8 @@ int gameboard[N][N] = {
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 //매개함수 정열 ?
 void draw_board();//게임판 만들기   
-void print_othello(int player_cnt, int player_t, int game_cnt, int pass_cnt, int input1, int input2); // 게임자 입력 받기 전 게임판,배치 상태 출력, 게임과정 출력해서 사용자가 알 수 있게 하는거 
-int isGameEnd(int pass_cnt,int player_cnt, int flip_cnt); //game 종료 조건 확인
+void print_othello(int player_cnt, int player_t, int game_cnt, int pass_cnt); // 게임자 입력 받기 전 게임판,배치 상태 출력, 게임과정 출력해서 사용자가 알 수 있게 하는거 
+int isGameEnd(int pass_cnt,int player_cnt, int flip_cnt, int game_cnt); //game 종료 조건 확인
 int isBoardPlay( int player_cnt); //배치가능 칸 확인 
 int turn(int player_t,int game_cnt, int input1, int input2); //돌 뒤집고, 돌 개수 검사하 기   
 int garo_check(int player_t,int input1, int input2);//가로  낑긴 돌 바꾸기  
@@ -46,9 +46,11 @@ int main (void) {	//필요한 변수들 정의 : WHITE개수 , BLACK개수  ,6*6 게임판 , 입
 	player_cnt = 2;
 	game_cnt = 1;	
 	
-	while (isGameEnd(pass_cnt, player_cnt, flip_cnt) == 0 ) { //game 종료 조건 확인 pass_cnt, gameboard[N][N], player_cnt
-		print_othello(player_cnt, player_t, game_cnt, pass_cnt, input1, input2); 
+	while (isGameEnd(pass_cnt, player_cnt, flip_cnt, game_cnt) == 0 ) { //game 종료 조건 확인 pass_cnt, gameboard[N][N], player_cnt//0이면 게임 안 종료 1이면 종료 
+		print_othello(player_cnt, player_t, game_cnt, pass_cnt); 
+		
 	 	if (isBoardPlay(player_cnt) == 1) { //두 player 모두 배치가 불가능하면 반복문을 빠져나가야함
+	 	
 			
  			printf(" out a new %f othello : ", player_t);
   			scanf(" %d %d  ",&input1, &input2); 
@@ -66,9 +68,9 @@ int main (void) {	//필요한 변수들 정의 : WHITE개수 , BLACK개수  ,6*6 게임판 , 입
 	 	else if (isBoardPlay(player_cnt) == 0) {
 			pass_cnt++;
 			continue; 
-			if(isGameEnd(pass_cnt, player_cnt, flip_cnt) == 0 && player_t == -1) 
+			if(isGameEnd(pass_cnt, player_cnt, flip_cnt, game_cnt) == 0 && player_t == -1) 
 				player_t = 1;
-			else if(isGameEnd(pass_cnt, player_cnt, flip_cnt) == 0 && player_t == 1)
+			else if(isGameEnd(pass_cnt, player_cnt, flip_cnt,game_cnt) == 0 && player_t == 1)
 				player_t = -1;
 			
 		}
@@ -80,13 +82,13 @@ int main (void) {	//필요한 변수들 정의 : WHITE개수 , BLACK개수  ,6*6 게임판 , 입
 	
 	//winner 정하는 식  
 	if((game_cnt != 0) && (game_cnt % 2 == 0)){
-		printf("winner is black");
+		printf("winner is black\n");
 		printf("black count is %d", player_cnt);
 			
     }
     else if(game_cnt % 2 == 1) 
     {	
-		printf("winner is white");
+		printf("winner is white\n");
 		printf("white count is %d", player_cnt);	
     }
 
