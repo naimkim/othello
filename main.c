@@ -45,7 +45,7 @@ void main (void) {	//필요한 변수들 정의 : WHITE개수 , BLACK개수  ,6*6 게임판 , �
 	while (isGameEnd(pass_cnt, gameboard[N][N], player_cnt) == 0) { //game 종료 조건 확인 pass_cnt, gameboard[N][N], player_cnt
 	 {
 		  print_othello(player_cnt, player_t, game_cnt, pass_cnt, gameboard[N][N]); 
-	 	 if (isBoardPlay() == 1) 
+	 	 if (isBoardPlay(gameboard[N][N], player_cnt) == 1) 
 	 	 	{ //두 player 모두 배치가 불가능하면 반복문을 빠져나가야함
 			
  			printf(" out a new %f othello : ", player_t);
@@ -61,20 +61,20 @@ void main (void) {	//필요한 변수들 정의 : WHITE개수 , BLACK개수  ,6*6 게임판 , �
 				continue;
 				
 			}}
-	 	 else if (isBoardPlay() == 0) 
+	 	 else if (isBoardPlay(gameboard[N][N], player_cnt) == 0) 
 			{
 			  pass_cnt++;
 			  continue; 
-			if(isGameEnd == 0 && player_t == -1) 
+			if(isGameEnd(pass_cnt, gameboard[input1][input2], player_cnt) == 0 && player_t == -1) 
 				player_t = 1;
-			else if(isGameEnd == 0 && player_t == 1)
+			else if(isGameEnd(pass_cnt, gameboard[input1][input2], player_cnt) == 0 && player_t == 1)
 				player_t = -1;
 			 
 				 
 			}
 			 
 	//돌 뒤집기   			
-	turn();
+	turn(player_t, gameboard[N][N], game_cnt, input1, input2);
 	game_cnt++;
 	}
 	//winner 정하는 식  
@@ -135,8 +135,7 @@ int draw_board(int gameboard[N][N])//게임판 그리는 함수
 void print_othello(int player_cnt, int player_t, int game_cnt, int pass_cnt, int gameboard[N][N])
 {	// 게임 과정에서 아래 상황 및 내용은 반드시 출력으로 사용자들이 알 수 있게 해야함
 	//게임판 모니터에 출력해서 O,X형태 2*2로 보이게 해야함.
-	turn();
-	int total_flip;
+	turn(player_t, gameboard[N][N], game_cnt, input1, input2);
 	//판 white = O , black = X
 	draw_board(gameboard[N][N]);
 	//알개수  status : white 2, black 2 
@@ -497,6 +496,3 @@ player_cnt = a+ b+ c+d + playerAcnt;
 		
 	return player_cnt;   
 }
-
-
-
