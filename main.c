@@ -4,8 +4,8 @@
 #define N 6
 /* run this program using the console pauser or add your own getch, system("pause") or input loop */
 //¸Å°³ÇÔ¼ö Á¤¿­ ?
-int draw_othello;//°ÔÀÓÆÇ ¸¸µé±â   
-int print_othello();  // °ÔÀÓÀÚ ÀÔ·Â ¹Þ±â Àü °ÔÀÓÆÇ,¹èÄ¡ »óÅÂ Ãâ·Â, °ÔÀÓ°úÁ¤ Ãâ·ÂÇØ¼­ »ç¿ëÀÚ°¡ ¾Ë ¼ö ÀÖ°Ô ÇÏ´Â°Å 
+int draw_board();//°ÔÀÓÆÇ ¸¸µé±â   
+void print_othello();  // °ÔÀÓÀÚ ÀÔ·Â ¹Þ±â Àü °ÔÀÓÆÇ,¹èÄ¡ »óÅÂ Ãâ·Â, °ÔÀÓ°úÁ¤ Ãâ·ÂÇØ¼­ »ç¿ëÀÚ°¡ ¾Ë ¼ö ÀÖ°Ô ÇÏ´Â°Å 
 int isGameEnd(); //game Á¾·á Á¶°Ç È®ÀÎ
 int isBoardPlay(); //¹èÄ¡°¡´É Ä­ È®ÀÎ 
 int turn(); //µ¹ µÚÁý°í, µ¹ °³¼ö °Ë»çÇÏ ±â   
@@ -23,9 +23,9 @@ void main (void) {	//ÇÊ¿äÇÑ º¯¼öµé Á¤ÀÇ : WHITE°³¼ö , BLACK°³¼ö  ,6*6 °ÔÀÓÆÇ , À
 //	Ä­¿¡ Èò¾ËÀÌ ÀÖÀ½ : -1 : O
 	int white = -1;	
 
-	int player_cnt;// ÇöÀç turn µ¹ °³¼ö 
-	int player_t;//¸ÂÀ¸¸é 1 Æ²¸®¸é 0 != == 
-	int game_cnt;//turn °³¼ö
+	int player_cnt;////player_cntÀÇ µ¹ °³¼ö´Â µÚÁýÀº µ¹ °³¼ö
+	int player_t=-1;//ÇöÀç turn »ç¶÷  
+	int game_cnt=0;//turn °³¼ö
 	int pass_cnt=0; 
 	int input1;
 	int input2;
@@ -40,9 +40,11 @@ void main (void) {	//ÇÊ¿äÇÑ º¯¼öµé Á¤ÀÇ : WHITE°³¼ö , BLACK°³¼ö  ,6*6 °ÔÀÓÆÇ , À
 	{0,0,0,0,0,0},
 	{0,0,0,0,0,0}
 	};
+	player_cnt = 2;
 	game_cnt = 1;	
-	while (isGameEnd() == 0) { //game Á¾·á Á¶°Ç È®ÀÎ 
-	 	 print_othello(); 
+	while (isGameEnd(pass_cnt, gameboard[N][N], player_cnt) == 0) { //game Á¾·á Á¶°Ç È®ÀÎ pass_cnt, gameboard[N][N], player_cnt
+	 {
+		  print_othello(player_cnt, player_t, game_cnt, pass_cnt, gameboard[N][N]); 
 	 	 if (isBoardPlay() == 1) 
 	 	 	{ //µÎ player ¸ðµÎ ¹èÄ¡°¡ ºÒ°¡´ÉÇÏ¸é ¹Ýº¹¹®À» ºüÁ®³ª°¡¾ßÇÔ
 			
@@ -51,30 +53,14 @@ void main (void) {	//ÇÊ¿äÇÑ º¯¼öµé Á¤ÀÇ : WHITE°³¼ö , BLACK°³¼ö  ,6*6 °ÔÀÓÆÇ , À
 				  
 	 	 	if ( input1<= 0 || input1>=6 || input2<=0 || input2 >=6 ) {  
 			//¹®ÀÇÁÖ½Å Ãâ·ÂÀÇ °æ¿ì, °¢ Ä­¿¡ ´ëÇØ À§ÀÇ ¹è¿­¿ä¼Ò °ª¿¡ ¸Â°Ô O È¤Àº X È¤Àº ºó Ä­À¸·Î Ãâ·ÂÀ» ÇÏ¸é µË´Ï´Ù. 
-					switch (gameboard[input1][input2])
-					{
-						case 0:
-							printf(" ");
-							break;
-						case 1:
-							printf("X");
-							break;
-						case -1:
-							printf("O");
-							break;	
-			
-						default:
-							break;	
-					}}
+				break;
+				}
 			else{
 				printf(" invalid input! (should be less than 6)\n");
 				//turnÇÔ¼ö¿¡¼­  ¸î°³ µÚÁý¾ú´ÂÁöcnt¼¼¼­ Ãâ·Â; 
-				// ÅÏ ¹Ù²Þ
-				if(isGameEnd == 0 && player_t == -1) 
-					player_t = 1;
-				else if(isGameEnd == 0 && player_t == 1)
-					player_t = -1; 
-	 	 	 }}
+				continue;
+				
+			}}
 	 	 else if (isBoardPlay() == 0) 
 			{
 			  pass_cnt++;
@@ -91,6 +77,7 @@ void main (void) {	//ÇÊ¿äÇÑ º¯¼öµé Á¤ÀÇ : WHITE°³¼ö , BLACK°³¼ö  ,6*6 °ÔÀÓÆÇ , À
 	turn();
 	game_cnt++;
 	}
+	//winner Á¤ÇÏ´Â ½Ä  
 	if((game_cnt != 0) && (game_cnt % 2 == 0))
 
         {
@@ -107,24 +94,14 @@ void main (void) {	//ÇÊ¿äÇÑ º¯¼öµé Á¤ÀÇ : WHITE°³¼ö , BLACK°³¼ö  ,6*6 °ÔÀÓÆÇ , À
 
         }
 
-        else
-
-               printf( " 0 \n" );
 }
-
-int draw_board()//°ÔÀÓÆÇ ±×¸®´Â ÇÔ¼ö
+//¸Å°³ÇÔ¼ö ========================================== 
+int draw_board(int gameboard[N][N])//°ÔÀÓÆÇ ±×¸®´Â ÇÔ¼ö
 // 2/2 3/3 white 2/3 3/2 black
-{	int gameboard[N][N] = {
-	{0,0,0,0,0,0},
-	{0,0,0,0,0,0},
-	{0,0,0,0,0,0},
-	{0,0,0,0,0,0},
-	{0,0,0,0,0,0},
-	{0,0,0,0,0,0}
-	};
+{	
 	int i,j;
 
-	printf("   0  1  2  3  4  5 \n");
+		printf("    0   1   2   3   4   5 \n");
 	printf("=========================\n");
 	
 	for (i=0; i<N; i++)	
@@ -132,24 +109,36 @@ int draw_board()//°ÔÀÓÆÇ ±×¸®´Â ÇÔ¼ö
 		printf(" %d", i);
 		for( j=0 ; j<N ; j++ )
 		{
-		printf("|%c|", gameboard[i][j]);	
+		printf("|%c|", 'gameboard[i][j]');
+			switch (gameboard[i][j])
+					{
+						case 0:
+							printf(" ");
+							break;
+						case 1:
+							printf("X");
+							break;
+						case -1:
+							printf("O");
+							break;	
+			
+						default:
+							break;	}
 		if (j == 5)
 			printf("\n");
 		} 
 			printf(" ----------------------\n ");
-	
-	}
+}
+	return gameboard[N][N];
 }
 
-int print_othello(int player_cnt, int player_t, int game_cnt, int pass_cnt)
+void print_othello(int player_cnt, int player_t, int game_cnt, int pass_cnt, int gameboard[N][N])
 {	// °ÔÀÓ °úÁ¤¿¡¼­ ¾Æ·¡ »óÈ² ¹× ³»¿ëÀº ¹Ýµå½Ã Ãâ·ÂÀ¸·Î »ç¿ëÀÚµéÀÌ ¾Ë ¼ö ÀÖ°Ô ÇØ¾ßÇÔ
 	//°ÔÀÓÆÇ ¸ð´ÏÅÍ¿¡ Ãâ·ÂÇØ¼­ O,XÇüÅÂ 2*2·Î º¸ÀÌ°Ô ÇØ¾ßÇÔ.
 	turn();
 	int total_flip;
 	//ÆÇ white = O , black = X
-	int a;
-	a = draw_board();
-	printf("%f",a);
+	draw_board(gameboard[N][N]);
 	//¾Ë°³¼ö  status : white 2, black 2 
 	if(player_t == -1)
 		printf(" STATUS - WHITE : %d, BLACK : %d ", player_cnt, game_cnt-pass_cnt - player_cnt);
@@ -157,9 +146,7 @@ int print_othello(int player_cnt, int player_t, int game_cnt, int pass_cnt)
 		printf(" STATUS - WHITE : %d, BLACK : %d ", game_cnt-pass_cnt - player_cnt, player_cnt);		
   	//¹èÄ¡ °á°ú ¹æÇâº° µÚÁý¾îÁö´Â ¾Ë °³¼ö, ÃÑµÚÁý¾îÁø ¾Ë°³¼ö 
   	
-  	
-	
-	return total_flip;
+  
  } 
 
   
@@ -172,26 +159,29 @@ int isGameEnd(int pass_cnt, int gameboard[N][N], int player_cnt)
   int i,j;
   int x;
  
-while(x==1)
+while(1)
 {
   for(i=0; i<6; i++)
   {
   	for(j=0;j<6;j++)
   	{
   		if(	gameboard[i][j] == gameboard[i][j+1])
-  				x= 1; 
+  		{
+			  	x = 1; 
+  			continue; }
   		else if ( gameboard[i][j] != 0 )
-  			x = 1;
+  		{
+			x = 1;
+  			continue; }
   		else if ( pass_cnt == 2 || player_cnt == 0 )
-  			x = 1;	
+  		{
+			x = 1;
+			continue; }	
   		else
-	  		x = 0;
-  		//break ÀÎ°¡ continue ÀÎ°¡!!!!!!! ¹«¾ùÀÎ°¡!!!!!! 
+	  	{
+			x = 0;
+	  		break; }
   	}
-  	if(x==0)
-  		break;
-  	else if (x==1)
-  		continue;
   }
 }
   return x;
@@ -199,7 +189,7 @@ while(x==1)
 
 
 //isboardplay °¡ 0ÀÌ¸é pass 
-int isBoardPlay(int gameboard[N][N], int flip_cnt)
+int isBoardPlay(int gameboard[N][N], int player_cnt)
   {//¹èÄ¡ °¡´É Ä­ÀÌ ÀÖ´ÂÁö È®ÀÎ   ÀÖÀ¸¸é 1 ¾øÀ¸¸é 0 
    //¾ËÀÌ ¾ø´Â Ä­ÀÎ°¡
    int i,j;
@@ -215,12 +205,12 @@ int isBoardPlay(int gameboard[N][N], int flip_cnt)
    				continue;
 		   }
    }
-   if(flip_cnt ==0 || cnt == 36)
+   if(player_cnt ==0 || cnt == 36)
    		return 1;
 	else 
   		 return 0;
   
-   
+}
 int garo_check(int player_t,int input1, int input2, int gameboard[N][N])
 {
 	int east;
@@ -419,6 +409,7 @@ for (j=0;j< d4-1;j++)
 
 	return (d3+d4);	
 }
+
 int turn(int player_t, int gameboard[N][N], int game_cnt, int input1, int input2)
 { //µÚÁý´Â Á¶°Ç   
 //µ¹ °³¼ö ¼¼±â  
@@ -491,20 +482,21 @@ int turn(int player_t, int gameboard[N][N], int game_cnt, int input1, int input2
 playerAcnt = east+west+north+south+x_en +x_es+x_wn+x_ws;//µÚÁýÀº µ¹ °³¼ö ¼¼°í ºüÁ®³ª¿À±â   
  //³©±ä µ¹ ¹Ù²Ù°í °¹¼ö¸¦ return½ÃÅ°´Â ÇÔ¼ö
   //int player_t,int input1, int input2, int gameboard[N][N]
-a= garo_check();  
-b= sero_check();
-c= degak1_check(); 
-d= degak2_check(); 
+
+a= garo_check(player_t, input1, input2, gameboard[N][N]);  
+b= sero_check(player_t, input1, input2, gameboard[N][N]);
+c= degak1_check(player_t, input1, input2, gameboard[N][N]); 
+d= degak2_check(player_t, input1, input2, gameboard[N][N]); 
 
 player_cnt = a+ b+ c+d + playerAcnt;
 	if(game_cnt>1)
 	{ printf("::flip result:: \n");
 		 printf("E : %d, W : %d, N : %d, S : %d, NE : %d, SE : %d, NW : %d, SW : %d\n", east, west, north, south, x_en, x_es, x_wn, x_ws);
-		printf("you has flipped %d othellos! ", east+west+north+south+x_en +x_es+x_wn+x_ws+garo_cnt+sero_cnt+degak1_cnt+degak2_cnt);
- 	 }
+		printf("you has flipped %d othellos! ", player_cnt);
+ }
 		
-	return player_cnt; 
-	 
+	return player_cnt;   
 }
+
 
 
