@@ -94,4 +94,4 @@ void main (void) {	//필요한 변수들 정의 : WHITE개수 , BLACK개수  ,6*6 게임판 , �
 
         }
 
-}
+}}
