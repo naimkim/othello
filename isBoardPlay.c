@@ -6,6 +6,7 @@ int isBoardPlay( int player_cnt)
    //알이 없는 칸인가
    int i,j;
    int cnt=0;// cnt 가 36이 되면 배치가능한 칸 없음  
+   
    for(i=0;i<6;i++)
    {
    		for(j=0;j<6;j++)
@@ -17,10 +18,11 @@ int isBoardPlay( int player_cnt)
    				continue;
 		   }
    }
+   
    if(player_cnt ==0 || cnt == 36)
-   		return 1;
+   		return 0;
 	else 
-  		 return 0;
+  		return 1;
   
 }
 
